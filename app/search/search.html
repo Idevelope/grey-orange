@@ -1,0 +1,21 @@
+<div class="input-group col-md-6 col-md-offset-3">
+  <p>This is the partial for view 2.</p>
+  <input type="text" class="form-control"  minlength="2" maxlength="50" required autofocus="" autocomplete="off" ng-change="search(searchText)" ng-model="searchText">
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <ul ng-repeat="search in searchList">
+      <li ng-bind="search.name" class="col-md-2"></li>
+      <li ng-bind="search.gender" class="col-md-1"></li>
+      <li ng-bind="search.height" class="col-md-1"></li>
+      <li ng-bind="search.mass" class="col-md-1"></li>
+      <li ng-bind="search.eye_color" class="col-md-1"></li>
+      <li ng-bind="search.hair_color" class="col-md-1"></li>
+      <li ng-bind="search.skin_color" class="col-md-1"></li>
+      <li ng-bind="search.birth_year" class="col-md-2"></li>
+      <li ng-bind="search.url" class="col-md-2"></li>
+    </ul>
+  </div>
+</div>
