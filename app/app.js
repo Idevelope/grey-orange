@@ -3,7 +3,7 @@
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
     'ngRoute',
-    //'ngResource',
+    'ui.bootstrap',
     'myApp.loginApp',
     'myApp.searchApp',
     'myApp.version'
@@ -11,7 +11,7 @@ angular.module('myApp', [
     config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
         $locationProvider.hashPrefix('!');
 
-        $routeProvider.otherwise({redirectTo: '/login'});
+        $routeProvider.otherwise({redirectTo: '/search'});
     }])
     .run([
         '$rootScope',

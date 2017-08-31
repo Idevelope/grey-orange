@@ -1,21 +1,62 @@
 <div class="input-group col-md-6 col-md-offset-3">
-  <p>This is the partial for view 2.</p>
-  <input type="text" class="form-control"  minlength="2" maxlength="50" required autofocus="" autocomplete="off" ng-change="search(searchText)" ng-model="searchText">
+  <!--<p>This is the partial for view 2.</p>-->
+
+    <div class="input-group">
+    <input type="text" ng-model="selectedState" placeholder="Locations loaded via $http"
+           uib-typeahead="address as address.state for address in getLocation($viewValue)"
+           typeahead-loading="loadingLocations" typeahead-no-results="noResults"
+           typeahead-template-url="customTemplate.html" class="form-control">
+        <span class="input-group-btn" ng-click="getCities()">
+             <button class="btn btn-default" type="button">Go!</button>
+         </span>
+        </div>
+    <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+    <div ng-show="noResults">
+        <i class="glyphicon glyphicon-remove"></i> No Results Found
+    </div>
 </div>
 
 
-<div class="row">
-  <div class="col-md-12">
-    <ul ng-repeat="search in searchList">
-      <li ng-bind="search.name" class="col-md-2"></li>
-      <li ng-bind="search.gender" class="col-md-1"></li>
-      <li ng-bind="search.height" class="col-md-1"></li>
-      <li ng-bind="search.mass" class="col-md-1"></li>
-      <li ng-bind="search.eye_color" class="col-md-1"></li>
-      <li ng-bind="search.hair_color" class="col-md-1"></li>
-      <li ng-bind="search.skin_color" class="col-md-1"></li>
-      <li ng-bind="search.birth_year" class="col-md-2"></li>
-      <li ng-bind="search.url" class="col-md-2"></li>
-    </ul>
+<div class="row" ng-if="cityList">
+  <div class="col-md-12 resultList">
+      <table class="table table-condensed">
+          <th>#Id</th>
+          <th>City</th>
+          <th>Population</th>
+          <tr ng-repeat="city in cityList">
+              <td ng-bind="city.id"></td>
+              <td ng-bind="city.city"></td>
+              <td ng-bind="city.population"></td>
+          </tr>
+      </table>
+    <!--<ul ng-repeat="city in cityList">-->
+      <!--<li ng-bind="city.id" class="col-md-2"></li>-->
+      <!--<li ng-bind="city.city" class="col-md-5"></li>-->
+      <!--<li ng-bind="city.population" class="col-md-5"></li>-->
+      <!--&lt;!&ndash;<li ng-bind="city.mass" class="col-md-1"></li>&ndash;&gt;-->
+    <!--</ul>-->
   </div>
 </div>
+
+<nav aria-label="Page navigation" ng-if="totalCount>0">
+    <ul class="pagination">
+        <li ng-click="getPageResult(selectedPage-1)">
+            <a aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li><span ng-repeat="page  in pageList" ng-click=" getPageResult(page)" > {{page}}</span></li>
+        <li ng-click="getPageResult(selectedPage+1)">
+            <a aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<script type="text/ng-template" id="customTemplate.html">
+    <a ng-click="selectState()">
+        <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+        <span>--</span>
+    </a>
+</script>

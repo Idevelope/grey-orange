@@ -17,7 +17,9 @@
             "planets": "https://swapi.co/api/planets/",
             "species": "https://swapi.co/api/species/",
             "starShips": "https://swapi.co/api/starships/",
-            "vehicles": "https://swapi.co/api/vehicles/"
+            "vehicles": "https://swapi.co/api/vehicles/",
+            "states": "http://blackbuck-fe.appspot.com/states",
+            "cities": "http://blackbuck-fe.appspot.com/cities"
         }
     })
 })(angular);
