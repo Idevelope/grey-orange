@@ -16,89 +16,77 @@ angular.module('myApp.searchApp', ['ngRoute'])
         'searchFactory',
         '$timeout',
         '$http',
-        function ($scope, appConstant, LocalStorageUtil, searchFactory, $timeout, $http) {
-            var timer;
-            $scope.search = function (text) {
-                if(text && 1 <text.length){
-                    $timeout.cancel(timer);
-                    timer = $timeout(
-                        function () {
-                            searchFactory.get('states' ,text).then(function(response){
-                                if(200 == response.status){
-                                    console.dir(response);
-                                    $scope.searchList = response.data.results;
-                                   return $scope.address = response.data.results;
-                                }
-                            }, function(error){
-                                console.dir(error);
-                                alert('some error occured');
-                            })
-                        }, 500);
+        '$location',
+        function ($scope, appConstant, LocalStorageUtil, searchFactory, $timeout, $http, $location) {
+            //var timer;
+            // will fetch user info of user selected from dropdown.
+            $scope.getUserRepo = function (item, model, label) {
+                if(!$scope.selectedUser.login){
+                    return;
                 }
-
+                  console.dir(item);
+                  console.dir(model);
+                  console.dir(label);
+                //LocalStorageUtil.setObject(appConstant.storageKeyValue.user, $scope.selectedUser);
+                updateQueryParams('user', $scope.selectedUser.login);
+                getUserRepositories($scope.selectedUser.login);
             };
 
-            $scope.getLocation = function(text){
-                var url = appConstant.urls['states'] ;
-                if(text){
+            //this is for typeahead- as our typeahead handles promise well .
+            $scope.getUserList = function (text) {
+                var url = appConstant.urls['gitUserList'];
+                if (text) {
                     return $http.get(url, {
-                        params:{query: text}
+                        params: {q: text}
                     }).then(function (response) {
-                            return response.data.places.map(function (item) {
-                                return item;
-                            });
-                        }, function(error){
-                            console.dir(error);
-                            alert('some error occured');
+                        return response.data.items.map(function (item) {
+                            return item;
                         });
+                    },handlerError);
                 }
 
             };
-
-            $scope.getCities = function(){
-                console.log($scope.selectedState);
-                $scope.cityList = [];
-                getCities($scope.selectedState.id, 1);
-            };
-
-
-            //:TODO: need make it util function for global use according to status code
-            function handlerError(error){
-                alert('error occurred');
-            }
-
-            function getCities(id, pageNo){
-                searchFactory.getCities('cities',{stateId:id, pageNo:pageNo}).then(function(response){
-                    $scope.cityList = response.data.places;
-                    $scope.totalCount =response.data.totalCount;
-                    $scope.totalPage = response.data.totalPages;
-                    $scope.pageList = _.range(1,$scope.totalPage+1);
+            function getUserRepositories(userId) {
+                searchFactory.get('gitUser', userId).then(function (response) {
+                    if (200 == response.status) {
+                        //:TODO : data model layer to implement to maintain consistency
+                        $scope.userRepos = response.data.items;
+                    }
                 }, handlerError)
             }
-            $scope.getPageResult = function (pageNo){
-                $scope.selectedPage = Number(pageNo);
-                getCities($scope.selectedState.id, $scope.selectedPage);
-//                searchFactory.getCities('cities',{stateId:$scope.selectedState.id, pageNo:$scope.selectedPage}).then(function(response){
-//                    $scope.cityList.concat(response.data.places);
-//                }, handlerError)
+
+            function updateQueryParams(key, val) {
+                $location.search(key, val);
             }
 
-            function init(){
+            //:TODO: need to make it util function for global use according to status code
+            var handlerError =function (error) {
+                console.error(error);
+                alert('error occurred');
+            };
+
+
+            // to initialise the my controller and pre-checks;
+            function init() {
+                //:TODO implement if pagination is required; but api is not supporting or not mentioned in problem statement
                 $scope.selectedPage = 1;
-                $scope.totalCount =0;
+                $scope.totalCount = 0;
                 $scope.totalPage = 1;
-//                searchFactory.get('people').then(function(response){
-//                    console.dir(response);
-//                    if(200 == response.status){
-//                        //:TODO : data model layer to implement to maintain consistency
-//                        $scope.searchList = response.data.results;
-//                    }else{
-//                        handlerError();
-//                    }
-//                }, function(error){
-//                    console.dir(error);
-//                    alert('some error occured');
-//                })
+                $scope.selectedUser = '';
+
+                /***another workaround is using localstorage to maintain the state of user* ***/
+                //$scope.selectedUser = (LocalStorageUtil.getObject(appConstant.storageKeyValue.user))? LocalStorageUtil.getObject(appConstant.storageKeyValue.user) : '';
+
+                if (!(_.isEmpty($location.search())) &&  $location.search().user) {
+                    var userId = $location.search().user;
+                    $scope.selectedUser =  userId;
+                    getUserRepositories(userId)
+                }
+                $scope.$watch('selectedUser', function (newVal, oldVal) { console.log('watcher', newVal, oldVal);
+                    if(''=== newVal || !newVal){
+                        $scope.userRepos.length=0;
+                    }
+                });
             }
 
             init();

@@ -12,14 +12,8 @@
             'deleteMethod': 'DELETE'
         },
         urls:{
-            "films": "https://swapi.co/api/films/",
-            "people": "https://swapi.co/api/people/",
-            "planets": "https://swapi.co/api/planets/",
-            "species": "https://swapi.co/api/species/",
-            "starShips": "https://swapi.co/api/starships/",
-            "vehicles": "https://swapi.co/api/vehicles/",
-            "states": "http://blackbuck-fe.appspot.com/states",
-            "cities": "http://blackbuck-fe.appspot.com/cities"
+            "gitUserList": "https://api.github.com/search/users",
+            "gitUser": "https://api.github.com/search/repositories"
         }
     })
 })(angular);

@@ -7,26 +7,16 @@
         function ($q, $http, appConstant) {
             var searchFactory = {};
 
-            //send OTP from login
             searchFactory.get = function (type, id) {
                 var url = appConstant.urls[type] ;
 //                url += (id)?  id:'';
                 return $http({
                     method: appConstant.methods.getMethod,
-                    params:{query: id},
+                    params:{q: 'user:'+id},
                     url: url
                 });
             };
 
-            searchFactory.getCities = function (type, params) {
-                var url = appConstant.urls[type] ;
-//                url += (id)?  id:'';
-                return $http({
-                    method: appConstant.methods.getMethod,
-                    params:{state_id: params.stateId, page: params.pageNo},
-                    url: url
-                });
-            };
 
 
             searchFactory.getSomethingElse = function () {

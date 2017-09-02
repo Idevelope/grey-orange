@@ -1,43 +1,45 @@
 <div class="input-group col-md-6 col-md-offset-3">
   <!--<p>This is the partial for view 2.</p>-->
 
-    <div class="input-group">
-    <input type="text" ng-model="selectedState" placeholder="Locations loaded via $http"
-           uib-typeahead="address as address.state for address in getLocation($viewValue)"
+    <div class="input-group state-input">
+    <input type="text" ng-model="selectedUser" placeholder="Locations loaded via $http"
+           uib-typeahead="users as users.login for users in getUserList($viewValue)"
            typeahead-loading="loadingLocations" typeahead-no-results="noResults"
-           typeahead-template-url="customTemplate.html" class="form-control">
-        <span class="input-group-btn" ng-click="getCities()">
+           typeahead-template-url="customTemplate.html" class="form-control"
+           typeahead-on-select="getUserRepo($item, $model, $label)"
+           typeahead-wait-ms="300">
+        <span class="input-group-btn" ng-click="getUserRepo(selectedUser)">
              <button class="btn btn-default" type="button">Go!</button>
          </span>
         </div>
-    <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+    <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
     <div ng-show="noResults">
         <i class="glyphicon glyphicon-remove"></i> No Results Found
     </div>
 </div>
 
-
-<div class="row" ng-if="cityList">
+<!--don't render if no data is there-->
+<div class="row" ng-if="userRepos && userRepos.length">
   <div class="col-md-12 resultList">
       <table class="table table-condensed">
-          <th>#Id</th>
-          <th>City</th>
-          <th>Population</th>
-          <tr ng-repeat="city in cityList">
-              <td ng-bind="city.id"></td>
-              <td ng-bind="city.city"></td>
-              <td ng-bind="city.population"></td>
+          <th>Size</th>
+          <th>Language</th>
+          <th>Forks-count</th>
+          <th>watchers-count</th>
+          <th>fork</th>
+          <tr ng-repeat="repo in userRepos">
+              <td ng-bind="repo.size"></td>
+              <td ng-bind="repo.language"></td>
+              <td ng-bind="repo.forks_count"></td>
+              <td ng-bind="repo.watchers_count"></td>
+              <td ng-bind="repo.fork"></td>
           </tr>
       </table>
-    <!--<ul ng-repeat="city in cityList">-->
-      <!--<li ng-bind="city.id" class="col-md-2"></li>-->
-      <!--<li ng-bind="city.city" class="col-md-5"></li>-->
-      <!--<li ng-bind="city.population" class="col-md-5"></li>-->
-      <!--&lt;!&ndash;<li ng-bind="city.mass" class="col-md-1"></li>&ndash;&gt;-->
-    <!--</ul>-->
+
   </div>
 </div>
 
+<!--pagination-->
 <nav aria-label="Page navigation" ng-if="totalCount>0">
     <ul class="pagination">
         <li ng-click="getPageResult(selectedPage-1)">
@@ -54,9 +56,11 @@
     </ul>
 </nav>
 
+
+<!--typeahead  dropdown list template-->
 <script type="text/ng-template" id="customTemplate.html">
-    <a ng-click="selectState()">
+    <a>
         <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
-        <span>--</span>
+        <!--<span>&#45;&#45;</span>-->
     </a>
 </script>

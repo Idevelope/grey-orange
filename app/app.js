@@ -21,12 +21,12 @@ angular.module('myApp', [
         'appConstant',
         function ($rootScope, $templateCache, LocalStorageUtil, $interval, appConstant) {
 
-            var users = [
-                {userName: 'luke skywalker',
-                password: '19BBY'},
-                {userName: 'darth vader',
-                password: '41.9BBY'}
-            ];
-            LocalStorageUtil.setObject(appConstant.storageKeyValue.user, users);
+            //var users = [
+            //    {userName: 'luke skywalker',
+            //        password: '19BBY'},
+            //    {userName: 'darth vader',
+            //        password: '41.9BBY'}
+            //];
+            //LocalStorageUtil.setObject(appConstant.storageKeyValue.user, users);
 
         }]);
